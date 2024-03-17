@@ -1,0 +1,32 @@
+@import "../../../index.scss";
+
+.rating {
+    display: flex;
+    gap: 24px;
+
+    &__block {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &-button {
+            @include clickable;
+
+            &-dislike {
+                transform: scale(1, -1);
+            }
+
+            &-liked {
+                path {
+                    fill: #219653;
+                }
+            }
+
+            &-disliked {
+                path {
+                    fill: #EB5757;
+                }
+            }
+        }
+    }
+}
