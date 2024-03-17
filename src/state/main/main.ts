@@ -14,9 +14,6 @@ const mainSlice = createSlice({
   name: "main",
   initialState,
   reducers: {
-    clearSearchedArticlesIds: (state) => {
-      state.searchedArticlesIds = null;
-    },
     setCurrentArticleId: (state, action: PayloadAction<number | null>) => {
       state.currentArticleId = action.payload;
       state.searchedArticlesIds = null;
@@ -51,6 +48,15 @@ const mainSlice = createSlice({
         articleToDislike.liked = false;
       }
     },
+    searchArticles: (state, action: PayloadAction<string>) => {
+      if (action.payload.length === 0) {
+        state.searchedArticlesIds = null;
+        return;
+      }
+
+      const searchedArticles: IArticleFromResponse[] = state.articles.filter((article: IArticleFromResponse) => article.title.toLowerCase().includes(action.payload.toLowerCase()));
+      state.searchedArticlesIds = searchedArticles.map((article: IArticleFromResponse) => article.id);
+    }
   },
   extraReducers: (builder: ActionReducerMapBuilder<IMainState>) => {
     builder
@@ -66,19 +72,6 @@ const mainSlice = createSlice({
       .addCase(articlesAsync.rejected, (state: IMainState) => {
         state.rejected = true;
         state.pending = false;
-      })
-      .addCase(searchArticlesAsync.pending, (state: IMainState) => {
-        state.rejected = false;
-        state.pending = true;
-      })
-      .addCase(searchArticlesAsync.fulfilled, (state: IMainState, action: PayloadAction<number[]>) => {
-        state.searchedArticlesIds = action.payload;
-        state.pending = false;
-        state.rejected = false;
-      })
-      .addCase(searchArticlesAsync.rejected, (state: IMainState) => {
-        state.pending = false;
-        state.rejected = true;
       });
   }
 });
@@ -102,18 +95,6 @@ export const articlesAsync = createAsyncThunk(
   }
 );
 
-export const searchArticlesAsync = createAsyncThunk(
-  "main/searchArticlesAsync",
-  async (searchQuery: string) => {
-    const url: string = `${URL_FOR_ARTICLES}?title=${searchQuery}`;
-    const response: Response = await fetch(url);
-    const tempArticles: IArticleFromResponse[] = await response.json();
-    const articleIds: number[] = tempArticles.map((article: IArticleFromResponse) => article.id);
-
-    return articleIds;
-  }
-);
-
-export const { clearSearchedArticlesIds, setCurrentArticleId, like, dislike } = mainSlice.actions;
+export const { setCurrentArticleId, like, dislike, searchArticles } = mainSlice.actions;
 
 export default mainSlice.reducer;
