@@ -84,8 +84,8 @@ export const articlesAsync = createAsyncThunk(
     const articles: IArticle[] = tempArticles.map((article: IArticleFromResponse) => {
       return {
         ...article,
-        likes: Math.floor(Math.random() * MAX_RANDOM_LIKES_OR_DISLIKES),
-        dislikes: Math.floor(Math.random() * MAX_RANDOM_LIKES_OR_DISLIKES),
+        likes: Math.floor(Math.random() * (MAX_RANDOM_LIKES_OR_DISLIKES + 1)),
+        dislikes: Math.floor(Math.random() * (MAX_RANDOM_LIKES_OR_DISLIKES + 1)),
         liked: false,
         disliked: false
       };
