@@ -31,16 +31,15 @@ button {
 }
 
 @mixin clickable {
-  position: relative;
-  top: 0px;
   cursor: pointer;
-  transition: top 0.2s ease-out;
+  scale: 1;
+  transition: scale 0.1s ease;
 
   &:hover {
-      top: -3px;
+    scale: 1.1;
   }
 
   &:active {
-      top: 3px;
+    scale: 0.9;
   }
 }
